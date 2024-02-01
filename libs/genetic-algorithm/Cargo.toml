@@ -3,3 +3,11 @@ name = "genetic-algorithm"
 version = "0.1.0"
 authors = ["Darian <dariandzirko@gmail.com>"]
 edition = "2021"
+
+[dependencies]
+rand = "0.8"
+
+[dev-dependencies]
+rand_chacha = "0.3"
+approx = "0.4"
+maplit = "1.0"
