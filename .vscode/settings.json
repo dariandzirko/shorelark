@@ -1,0 +1,7 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./libs/genetic-algorithm/Cargo.toml",
+        "./libs/genetic-algorithm/Cargo.toml",
+        "./libs/genetic-algorithm/Cargo.toml"
+    ]
+}
