@@ -1,6 +1,6 @@
 #![feature(impl_trait_in_assoc_type)]
 
-use rand::{seq::SliceRandom, Rng, RngCore};
+use rand::RngCore;
 
 pub use self::{chromosome::*, crossover::*, individual::*, mutation::*, selection::*};
 
