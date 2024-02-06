@@ -1,3 +1,6 @@
+
+use crate::*;
+
 pub struct RouletteWheelSelection;
 
 impl RouletteWheelSelection {
@@ -45,12 +48,6 @@ mod test {
 
                 histogram
             });
-
-        for _ in 0..1000 {
-            let fitness = method.select(&mut rng, &population).fitness() as i32;
-
-            *actual_histogram.entry(fitness).or_insert(0) += 1;
-        }
 
         let expected_histogram = maplit::btreemap! {
             1 => 98,

@@ -1,8 +1,9 @@
 #![feature(impl_trait_in_assoc_type)]
 
-use rand::RngCore;
-
 pub use self::{chromosome::*, crossover::*, individual::*, mutation::*, selection::*};
+
+use rand::seq::SliceRandom;
+use rand::{Rng, RngCore};
 
 mod chromosome;
 mod crossover;
