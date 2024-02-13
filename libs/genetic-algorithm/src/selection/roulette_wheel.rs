@@ -22,7 +22,7 @@ impl SelectionMethod for RouletteWheelSelection {
 
 #[cfg(test)]
 mod test {
-    use std::{collections::BTreeMap, default};
+    use std::collections::BTreeMap;
 
     use super::*;
     use maplit;
@@ -41,7 +41,7 @@ mod test {
             TestIndividual::new(4.0),
         ];
 
-        let mut actual_histogram: BTreeMap<i32, _> = (0..1000)
+        let actual_histogram: BTreeMap<i32, _> = (0..1000)
             .map(|_| method.select(&mut rng, &population))
             .fold(Default::default(), |mut histogram, individual| {
                 *histogram.entry(individual.fitness() as _).or_default() += 1;

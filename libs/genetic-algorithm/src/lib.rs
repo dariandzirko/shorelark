@@ -56,8 +56,6 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::marker::PhantomPinned;
-
     use super::*;
     use rand::SeedableRng;
     use rand_chacha::ChaCha8Rng;
