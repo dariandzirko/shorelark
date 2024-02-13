@@ -1,6 +1,6 @@
-
 use crate::*;
 
+#[derive(Default)]
 pub struct RouletteWheelSelection;
 
 impl RouletteWheelSelection {
