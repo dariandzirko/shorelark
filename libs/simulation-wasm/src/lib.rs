@@ -23,18 +23,25 @@ impl Simulation {
         //Need to work on the deprecated feature
         JsValue::from_serde(&world).unwrap()
     }
+
+    pub fn step(&mut self) {
+        self.sim.step()
+    }
 }
 
 #[derive(Clone, Debug, Serialize)]
 pub struct World {
     pub animals: Vec<Animal>,
+    pub foods: Vec<Food>,
 }
 
 impl From<&simulation::World> for World {
     fn from(world: &simulation::World) -> Self {
         let animals = world.animals().iter().map(Animal::from).collect();
 
-        Self { animals }
+        let foods = world.foods().iter().map(Food::from).collect();
+
+        Self { animals, foods }
     }
 }
 
@@ -42,6 +49,7 @@ impl From<&simulation::World> for World {
 pub struct Animal {
     pub x: f32,
     pub y: f32,
+    pub rotation: f32,
 }
 
 impl From<&simulation::Animal> for Animal {
@@ -49,6 +57,22 @@ impl From<&simulation::Animal> for Animal {
         Self {
             x: animal.position().x,
             y: animal.position().y,
+            rotation: animal.rotation().angle(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct Food {
+    pub x: f32,
+    pub y: f32,
+}
+
+impl From<&simulation::Food> for Food {
+    fn from(food: &simulation::Food) -> Self {
+        Self {
+            x: food.position().x,
+            y: food.position().y,
         }
     }
 }

@@ -1,5 +1,7 @@
+use std::path::Ancestors;
+
 use nalgebra::{Point2, Rotation2, Similarity2};
-use rand::{distributions::Alphanumeric, Rng, RngCore};
+use rand::{Rng, RngCore};
 
 pub struct Simulation {
     world: World,
@@ -14,6 +16,15 @@ impl Simulation {
 
     pub fn world(&self) -> &World {
         &self.world
+    }
+
+    pub fn step(&mut self) {
+        for animal in &mut self.world.animals {
+            animal.position += animal.rotation * nalgebra::Vector2::new(0.0, animal.speed);
+
+            animal.position.x = nalgebra::wrap(animal.position.x, 0.0, 1.0);
+            animal.position.y = nalgebra::wrap(animal.position.y, 0.0, 1.0);
+        }
     }
 }
 pub struct World {
