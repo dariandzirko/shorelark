@@ -3,7 +3,7 @@ use layer_topology::LayerTopology;
 use rand::{Rng, RngCore};
 
 mod layer;
-mod layer_topology;
+pub mod layer_topology;
 mod neuron;
 
 pub struct Network {
@@ -31,6 +31,19 @@ impl Network {
             .iter()
             .fold(inputs, |inputs, layer| layer.propagate(inputs))
     }
+
+    pub fn weights(&self) -> Vec<f32> {
+        use std::iter::once;
+
+        self.layers
+            .iter()
+            .flat_map(|layer| layer.neurons.iter())
+            .flat_map(|neuron| once(&neuron.bias).chain(&neuron.weights))
+            .copied()
+            .collect()
+    }
+
+    pub fn from_weights(layers: &[LayerTopology], weights: impl IntoIterator<Item = f32>) -> Self {}
 }
 
 #[cfg(test)]
