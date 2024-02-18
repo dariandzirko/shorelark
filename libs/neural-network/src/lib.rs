@@ -32,18 +32,26 @@ impl Network {
             .fold(inputs, |inputs, layer| layer.propagate(inputs))
     }
 
-    pub fn weights(&self) -> Vec<f32> {
+    pub fn weights(&self) -> impl Iterator<Item = f32> + '_ {
         use std::iter::once;
 
         self.layers
             .iter()
             .flat_map(|layer| layer.neurons.iter())
             .flat_map(|neuron| once(&neuron.bias).chain(&neuron.weights))
-            .copied()
-            .collect()
+            .cloned()
     }
 
-    pub fn from_weights(layers: &[LayerTopology], weights: impl IntoIterator<Item = f32>) -> Self {}
+    pub fn from_weights(layers: &[LayerTopology], weights: impl IntoIterator<Item = f32>) -> Self {
+        let mut weights = weights.into_iter();
+
+        let layers = layers
+            .windows(2)
+            .map(|layers| Layer::from_weights(layers[0].neurons, layers[1].neurons, &mut weights))
+            .collect();
+
+        Self { layers }
+    }
 }
 
 #[cfg(test)]

@@ -1,7 +1,8 @@
-pub use self::{animal::*, eye::*, food::*, world::*};
+pub use self::{animal::*, brain::*, eye::*, food::*, world::*};
 
 mod animal;
 mod animal_individual;
+mod brain;
 mod eye;
 mod food;
 mod world;
@@ -42,7 +43,7 @@ impl Simulation {
         &self.world
     }
 
-    pub fn step(&mut self, rng: &mut dyn RngCore) {
+    pub fn step(&mut self, rng: &mut dyn RngCore) -> Option<genetic_algorithm::Statistics> {
         self.process_collisions(rng);
         self.process_brains();
         self.process_movements();
@@ -50,7 +51,17 @@ impl Simulation {
         self.age += 1;
 
         if self.age > GENERATION_LENGTH {
-            self.evolve(rng)
+            Some(self.evolve(rng))
+        } else {
+            None
+        }
+    }
+
+    pub fn train(&mut self, rng: &mut dyn RngCore) -> genetic_algorithm::Statistics {
+        loop {
+            if let Some(summary) = self.step(rng) {
+                return summary;
+            }
         }
     }
 
@@ -82,7 +93,7 @@ impl Simulation {
                 animal
                     .eye
                     .process_vision(animal.position, animal.rotation, &self.world.foods);
-            let response = animal.brain.propagate(vision);
+            let response = animal.brain.nn.propagate(vision);
 
             let speed = response[0].clamp(-SPEED_ACCEL, SPEED_ACCEL);
 
@@ -93,7 +104,7 @@ impl Simulation {
         }
     }
 
-    fn evolve(&mut self, rng: &mut dyn RngCore) {
+    fn evolve(&mut self, rng: &mut dyn RngCore) -> genetic_algorithm::Statistics {
         self.age = 0;
 
         let current_population: Vec<_> = self
@@ -103,15 +114,17 @@ impl Simulation {
             .map(|animal| AnimalIndividial::from_animal(animal))
             .collect();
 
-        let evolved_population = self.ga.evolve(rng, &current_population);
+        let (evolved_population, stats) = self.ga.evolve(rng, &current_population);
 
         self.world.animals = evolved_population
             .into_iter()
             .map(|individual| individual.into_animal(rng))
             .collect();
 
-        for food in self.world.foods {
+        for food in &mut self.world.foods {
             food.position = rng.gen()
         }
+
+        stats
     }
 }

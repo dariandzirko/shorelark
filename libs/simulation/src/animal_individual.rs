@@ -9,11 +9,13 @@ impl AnimalIndividial {
     pub fn from_animal(animal: &Animal) -> Self {
         Self {
             fitness: animal.satiation as f32,
-            chromosome: 
+            chromosome: animal.as_chromosome(),
         }
     }
 
-    pub fn into_animal(self, rng: &mut dyn RngCore) -> Animal {}
+    pub fn into_animal(self, rng: &mut dyn RngCore) -> Animal {
+        Animal::from_chromosome(self.chromosome, rng)
+    }
 }
 
 impl genetic_algorithm::Individual for AnimalIndividial {
